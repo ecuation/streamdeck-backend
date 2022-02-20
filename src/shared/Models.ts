@@ -48,11 +48,18 @@ export interface OBSError {
   code: string;
   error: string;
 }
-export interface Mute {
+export interface MuteProperties {
   item: string;
   status: boolean;
 }
 export interface Instructions {
   setScene: string;
-  mute: Array<Mute>;
+  mute: Array<MuteProperties>;
+  setFilter: Array<FilterProperties>;
+}
+
+export interface FilterProperties {
+  sourceName: string;
+  filterName: string;
+  filterEnabled: boolean;
 }

@@ -10,10 +10,15 @@ export class DispatcherService {
   }
 
   async make() {
-    const actions = Object.keys(this.instructions) as ["setScene", "mute"];
+    const insutructions = Object.keys(this.instructions) as [
+      "setScene",
+      "mute",
+      "setFilter"
+    ];
+
     try {
-      for (const action of actions) {
-        await this[action]();
+      for (const instruction of insutructions) {
+        await this[instruction]();
       }
     } catch (error) {
       throw error;
@@ -33,6 +38,17 @@ export class DispatcherService {
       const actions = this.instructions.mute;
       for (const action of actions) {
         await this.obs.muteAudioItem(action.item, action.status);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setFilter() {
+    try {
+      const actions = this.instructions.setFilter;
+      for (const filter of actions) {
+        await this.obs.setSourceFilterVisibility(filter);
       }
     } catch (error) {
       throw error;

@@ -1,6 +1,6 @@
 import * as OBSWebSocket from "obs-websocket-js";
 
-import { ItemProperties, Scene } from "../Shared/Models";
+import { FilterProperties, ItemProperties, Scene } from "../Shared/Models";
 
 export class OBSService {
   obs: OBSWebSocket;
@@ -82,6 +82,19 @@ export class OBSService {
       await this.obs.send("SetMute", {
         source: itemName,
         mute: status,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setSourceFilterVisibility(filter: FilterProperties) {
+    try {
+      const { sourceName, filterName, filterEnabled } = filter;
+      await this.obs.send("SetSourceFilterVisibility", {
+        sourceName,
+        filterName,
+        filterEnabled,
       });
     } catch (error) {
       throw error;
