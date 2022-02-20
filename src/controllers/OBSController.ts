@@ -46,6 +46,7 @@ class OBSController {
     }
   }
 
+  // TODO: Add validation request
   async changeItems(req: Request, res: Response, next: NextFunction) {
     try {
       const { instructions } = req.body;
