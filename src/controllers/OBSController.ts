@@ -5,11 +5,14 @@ import { OBSError } from "../Shared/Models";
 
 class OBSController {
   private obs: OBSService;
-  constructor(obs: OBSService) {
+  private socket: any;
+  constructor(obs: OBSService, socket: any) {
     this.obs = obs;
+    this.socket = socket;
   }
   async getCurrentScene(req: Request, res: Response, next: NextFunction) {
     try {
+      this.socket.emit("pinga", { chota: "porongasssss", chucha: "fresca" });
       const currentScene = await this.obs.getCurrentScene();
       return res.send(currentScene);
     } catch (error: OBSError | any) {

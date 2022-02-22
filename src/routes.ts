@@ -1,17 +1,21 @@
 import * as express from "express";
+import { Server } from "socket.io";
 import OBSController from "./controllers/OBSController";
 import { OBSService } from "./services/OBSService";
 const router = express.Router();
 
 export default class Router {
-  private obs: OBSService;
   private obsController: OBSController;
-
-  constructor(obs: OBSService) {
-    this.obs = obs;
-    this.obs.connect();
-    this.obsController = new OBSController(obs);
+  private socket?: Server;
+  constructor(obs: OBSService, io: Server) {
+    const socket = this.socketConnect(io);
+    this.obsController = new OBSController(obs, socket);
     this.makeRoutes();
+    obs.connect();
+  }
+
+  socketConnect(io: Server) {
+    return io.on("connection", (socket) => socket);
   }
 
   makeRoutes() {

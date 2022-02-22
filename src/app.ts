@@ -1,21 +1,26 @@
 import * as express from "express";
 import Router from "./routes";
 import { OBSService } from "./services/OBSService";
-import * as swaggerUi from "swagger-ui-express";
-const swaggerDocument = require("./swagger.json");
-
-console.log(swaggerDocument);
+import * as http from "http";
+import { Server } from "socket.io";
 
 require("dotenv").config();
-
 const app = express();
+const server = http.createServer(app);
 const port = 8081;
-const router = new Router(new OBSService());
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET"],
+  },
+});
+
+const router = new Router(new OBSService(), io);
 
 app.use(express.json());
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(express.static(__dirname + "/public"));
 app.use("/api/obs", router.getRouter());
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
