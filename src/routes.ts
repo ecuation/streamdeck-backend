@@ -11,7 +11,7 @@ export default class Router {
     const socket = this.socketConnect(io);
     this.obsController = new OBSController(obs, socket);
     this.makeRoutes();
-    obs.connect();
+    // obs.connect();
   }
 
   socketConnect(io: Server) {

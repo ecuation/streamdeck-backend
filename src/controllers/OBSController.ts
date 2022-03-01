@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { APINotFoundError } from "../errorHandlers/ApiNotFoundError";
+import { BaseError } from "../errorHandlers/BaseError";
 import { DispatcherService } from "../services/DispatcherService";
 import { OBSService } from "../services/OBSService";
 import { OBSError } from "../Shared/Models";
+import { ApiResponses } from "../utils/ApiResponses";
 
 class OBSController {
   private obs: OBSService;
@@ -12,11 +15,12 @@ class OBSController {
   }
   async getCurrentScene(req: Request, res: Response, next: NextFunction) {
     try {
-      this.socket.emit("pinga", { chota: "porongasssss", chucha: "fresca" });
       const currentScene = await this.obs.getCurrentScene();
-      return res.send(currentScene);
-    } catch (error: OBSError | any) {
-      return next(error.description);
+      return res.send(
+        ApiResponses.success("Scene retrieved successfully", currentScene)
+      );
+    } catch (error: BaseError | any) {
+      return next(error);
     }
   }
 
@@ -45,7 +49,7 @@ class OBSController {
       await this.obs.switchToScene(sceneName);
       res.send({ message: "scene changed successfully!", sceneName });
     } catch (error) {
-      res.status(500).json({ error });
+      next(error);
     }
   }
 
@@ -53,11 +57,10 @@ class OBSController {
   async changeItems(req: Request, res: Response, next: NextFunction) {
     try {
       const { instructions } = req.body;
-      const dispatcher = new DispatcherService(instructions, this.obs);
-      await dispatcher.make();
-      res.send("Instructions changed successfully!");
-    } catch (error) {
-      res.status(500).json({ error });
+      this.socket.emit("obs-channel", instructions);
+      res.send(ApiResponses.success("Instructions changed successfully!"));
+    } catch (error: BaseError | any) {
+      next(error);
     }
   }
 }

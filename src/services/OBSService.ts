@@ -1,4 +1,5 @@
 import * as OBSWebSocket from "obs-websocket-js";
+import { APINotFoundError } from "../errorHandlers/ApiNotFoundError";
 
 import { FilterProperties, ItemProperties, Scene } from "../Shared/Models";
 

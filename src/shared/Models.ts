@@ -63,3 +63,10 @@ export interface FilterProperties {
   filterName: string;
   filterEnabled: boolean;
 }
+
+export enum HTPPStatuses {
+  OK = 200,
+  BAD_REQUEST = 401,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
+}
