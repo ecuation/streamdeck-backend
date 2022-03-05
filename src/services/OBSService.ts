@@ -1,5 +1,7 @@
 import * as OBSWebSocket from "obs-websocket-js";
 import { APINotFoundError } from "../errorHandlers/ApiNotFoundError";
+import { BaseError } from "../ErrorHandlers/BaseError";
+import { InternalServerError } from "../errorHandlers/InternalServerError";
 
 import { FilterProperties, ItemProperties, Scene } from "../Shared/Models";
 
@@ -20,11 +22,9 @@ export class OBSService {
         address: process.env.OBS_HOST,
         password: process.env.OBS_PASSWORD,
       });
-
       console.log("OBS connection success!");
-    } catch (error) {
-      console.log("OBS cannot be connected: ", error);
-      throw error;
+    } catch (error: BaseError | any) {
+      throw new Error("OBS cannot be connected");
     }
   }
 
@@ -39,14 +39,7 @@ export class OBSService {
   }
 
   async getCurrentScene(): Promise<Scene> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const scene = await this.obs.send("GetCurrentScene");
-        resolve(scene);
-      } catch (error) {
-        reject(error);
-      }
-    });
+    return await this.obs.send("GetCurrentScene");
   }
 
   async getItemCurrentStatus(itemName: string): Promise<ItemProperties> {

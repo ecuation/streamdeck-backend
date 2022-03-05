@@ -1,12 +1,12 @@
 import { HTTPStatuses } from "../Shared/Models";
 import { BaseError } from "./BaseError";
 
-export class APINotFoundError extends BaseError {
+export class InternalServerError extends BaseError {
   constructor(
     name: string,
-    statusCode = HTTPStatuses.NOT_FOUND,
-    isOperational = true,
-    description = "Not found"
+    statusCode = HTTPStatuses.INTERNAL_SERVER_ERROR,
+    isOperational = false,
+    description = "Internal server error"
   ) {
     super(name, statusCode, isOperational, description);
   }

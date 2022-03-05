@@ -64,7 +64,7 @@ export interface FilterProperties {
   filterEnabled: boolean;
 }
 
-export enum HTPPStatuses {
+export enum HTTPStatuses {
   OK = 200,
   BAD_REQUEST = 401,
   NOT_FOUND = 404,
