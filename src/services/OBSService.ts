@@ -50,6 +50,12 @@ export class OBSService {
     });
   }
 
+  async getSourceFilters(sourceName: string) {
+    return await this.obs.send("GetSourceFilters", {
+      sourceName,
+    });
+  }
+
   async showItemFromCurrentScene(itemName: string) {
     await this.setItemFromCurrentSceneVisibleTo(itemName, true);
   }

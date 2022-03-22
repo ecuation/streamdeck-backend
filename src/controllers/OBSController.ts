@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { APINotFoundError } from "../errorHandlers/ApiNotFoundError";
 import { BaseError } from "../errorHandlers/BaseError";
 import { DispatcherService } from "../services/DispatcherService";
 import { OBSService } from "../services/OBSService";
-import { OBSError } from "../Shared/Models";
+
 import { ApiResponses } from "../utils/ApiResponses";
 
 class OBSController {

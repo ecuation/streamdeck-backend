@@ -5,7 +5,9 @@ import * as http from "http";
 import { Server } from "socket.io";
 import { ErrorHandler } from "./errorHandlers/ErrorHandler";
 import { BaseError } from "./ErrorHandlers/BaseError";
+import * as cors from "cors";
 require("dotenv").config();
+
 const app = express();
 const server = http.createServer(app);
 const port = 8081;
@@ -16,7 +18,12 @@ const io = new Server(server, {
   },
 });
 const router = new Router(new OBSService(), io);
+var corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 app.use("/api/obs", router.getRouter());
