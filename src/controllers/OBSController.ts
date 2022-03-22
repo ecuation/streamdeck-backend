@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseError } from "../errorHandlers/BaseError";
-import { DispatcherService } from "../services/DispatcherService";
 import { OBSService } from "../services/OBSService";
-
+import { TwitchChatService } from "../services/TwitchChatService";
 import { ApiResponses } from "../utils/ApiResponses";
-
 class OBSController {
   private obs: OBSService;
   private socket: any;
+  private twitchService: TwitchChatService;
   constructor(obs: OBSService, socket: any) {
     this.obs = obs;
     this.socket = socket;
+    this.twitchService = new TwitchChatService();
   }
   async getCurrentScene(req: Request, res: Response, next: NextFunction) {
     try {
@@ -61,6 +61,12 @@ class OBSController {
     } catch (error: BaseError | any) {
       next(error);
     }
+  }
+
+  async twitchChat(req: Request, res: Response, next: NextFunction) {
+    const { message } = req.body;
+    this.twitchService.writeMessage(message);
+    res.send(ApiResponses.success("Message sent successfully!"));
   }
 }
 

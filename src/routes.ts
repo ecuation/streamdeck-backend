@@ -38,6 +38,11 @@ export default class Router {
       "/change-items",
       this.obsController.changeItems.bind(this.obsController)
     );
+
+    router.post(
+      "/twitch-chat",
+      this.obsController.twitchChat.bind(this.obsController)
+    );
   }
 
   getRouter() {

@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import { ErrorHandler } from "./errorHandlers/ErrorHandler";
 import { BaseError } from "./ErrorHandlers/BaseError";
 import * as cors from "cors";
+
 require("dotenv").config();
 
 const app = express();
@@ -18,7 +19,7 @@ const io = new Server(server, {
   },
 });
 const router = new Router(new OBSService(), io);
-var corsOptions = {
+const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
@@ -32,6 +33,7 @@ app.use(ErrorHandler.returnError);
 process.on("unhandledRejection", (error) => {
   throw error;
 });
+
 process.on("uncaughtException", (error: BaseError) => {
   ErrorHandler.logError(error);
   if (!ErrorHandler.isOperationalError(error)) {
