@@ -7,10 +7,14 @@ class OBSController {
   private obs: OBSService;
   private socket: any;
   private twitchService: TwitchChatService;
-  constructor(obs: OBSService, socket: any) {
+  constructor(
+    obs: OBSService,
+    socket: any,
+    twitchChatService: TwitchChatService
+  ) {
     this.obs = obs;
     this.socket = socket;
-    this.twitchService = new TwitchChatService();
+    this.twitchService = twitchChatService;
   }
   async getCurrentScene(req: Request, res: Response, next: NextFunction) {
     try {

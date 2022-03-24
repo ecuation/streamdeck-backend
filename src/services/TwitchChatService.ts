@@ -13,14 +13,19 @@ export class TwitchChatService {
 
   botsDB = new BotsDB();
   lastTimeRaided: Date = this.addMinutes(new Date(), 1);
+  private socket: any;
 
-  constructor() {
+  //TODO: add types for io argument
+  constructor(io: any) {
+    this.socket = io;
     this.tmiClient.connect();
     this.botsDB.writeFile();
     this.tmiClient.on(
       "message",
       (target: string, context: ChatUserstate, msg: string, self: boolean) => {
-        // this.onMessageHandler(target, context, msg, self);
+        if (msg === "!ninovimo") {
+          this.hideMainCam();
+        }
       }
     );
 
@@ -40,6 +45,16 @@ export class TwitchChatService {
           this.welcomeMessage();
         }
       }
+    });
+  }
+
+  hideMainCam() {
+    this.socket.emit("obs-channel", {
+      hideSource: [
+        {
+          sourceName: "LogitechCamCroma",
+        },
+      ],
     });
   }
 

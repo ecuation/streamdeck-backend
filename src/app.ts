@@ -5,6 +5,7 @@ import * as http from "http";
 import { Server } from "socket.io";
 import { ErrorHandler } from "./errorHandlers/ErrorHandler";
 import { BaseError } from "./ErrorHandlers/BaseError";
+import { TwitchChatService } from "./services/TwitchChatService";
 import * as cors from "cors";
 
 require("dotenv").config();
@@ -18,7 +19,8 @@ const io = new Server(server, {
     methods: ["GET"],
   },
 });
-const router = new Router(new OBSService(), io);
+const twitchChatService = new TwitchChatService(io);
+const router = new Router(new OBSService(), io, twitchChatService);
 const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204

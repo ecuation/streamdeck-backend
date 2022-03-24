@@ -2,14 +2,19 @@ import * as express from "express";
 import { Server } from "socket.io";
 import OBSController from "./controllers/OBSController";
 import { OBSService } from "./services/OBSService";
+import { TwitchChatService } from "./services/TwitchChatService";
 const router = express.Router();
 
 export default class Router {
   private obsController: OBSController;
   private socket?: Server;
-  constructor(obs: OBSService, io: Server) {
+  constructor(
+    obs: OBSService,
+    io: Server,
+    twitchChatService: TwitchChatService
+  ) {
     const socket = this.socketConnect(io);
-    this.obsController = new OBSController(obs, socket);
+    this.obsController = new OBSController(obs, socket, twitchChatService);
     this.makeRoutes();
     //obs.connect();
   }
