@@ -50,7 +50,7 @@ export class TwitchChatService {
 
   hideMainCam() {
     this.socket.emit("obs-channel", {
-      hideSource: [
+      hideAndShowSource: [
         {
           sourceName: "LogitechCamCroma",
         },
