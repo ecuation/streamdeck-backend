@@ -12,7 +12,7 @@ export class TwitchChatService {
   });
 
   botsDB = new BotsDB();
-  lastTimeRaided: Date = this.addMinutes(new Date(), 1);
+  lastTimeRaided: Date = this.addMinutes(new Date(), 10);
   private socket: any;
 
   //TODO: add types for io argument
@@ -40,9 +40,10 @@ export class TwitchChatService {
       const currentTime = new Date();
       const lastTimeRaided = this.lastTimeRaided;
       const botDB = new BotsDB();
-      if (currentTime.valueOf() > lastTimeRaided.valueOf()) {
-        if (!botDB.isBot(username)) {
-          this.welcomeMessage();
+      if (!botDB.isBot(username)) {
+        if (currentTime.valueOf() > lastTimeRaided.valueOf()) {
+          console.log("JOINED: " + username);
+          //this.welcomeMessage();
         }
       }
     });
