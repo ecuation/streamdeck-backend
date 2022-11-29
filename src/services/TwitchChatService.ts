@@ -1,6 +1,8 @@
 import { ChatUserstate } from "tmi.js";
 import * as tmi from "tmi.js";
 import { BotsDB } from "./BotsDB";
+const fs = require('fs');
+const appRoot = require("app-root-path");
 
 export class TwitchChatService {
   tmiClient = new tmi.client({
@@ -26,6 +28,17 @@ export class TwitchChatService {
         if (msg === "!ninovimo") {
           this.hideMainCam();
         }
+        
+        if((context.username == 'ecuationable' || context.mod) && msg === "!autopromo") {
+          fs.readFile(`${appRoot.path}/src/last-raider.txt`, 'utf8', (err: any, lastRaider: any) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+
+            this.writeMessage(`Un beso en la rosca para https://twitch.com/${lastRaider} seguidle, no sus ahueveis`);
+          });
+        }
       }
     );
 
@@ -34,6 +47,14 @@ export class TwitchChatService {
       this.writeMessage(
         `${username} ha enviado una raid con ${viewers} espectadores. Gracias!`
       );
+
+      if(viewers >= 2){
+        fs.writeFile(`${appRoot.path}/src/last-raider.txt`, username, (err: any) => {
+          if (err) {
+            console.error(err);
+          }
+        });
+      }
     });
 
     this.tmiClient.on("join", (channel, username) => {
@@ -41,9 +62,14 @@ export class TwitchChatService {
       const lastTimeRaided = this.lastTimeRaided;
       const botDB = new BotsDB();
       if (!botDB.isBot(username)) {
-        if (currentTime.valueOf() > lastTimeRaided.valueOf()) {
-          console.log("JOINED: " + username);
-          //this.welcomeMessage();
+        //if (currentTime.valueOf() > lastTimeRaided.valueOf()) {
+        console.log("JOINED: " + username);
+        //}
+      }else {
+        if(!['Nightbot', 'Streamelements', 'nightbot', 'streamelements', 'Streamcord', 'streamcord'].includes(username)){
+          this.tmiClient.ban('ecuationable', username, 'Sos un bot sucio');
+          console.log("Baneado, sos un bot sucio: " + username);
+          this.writeMessage(`Baneado, sos un bot sucio ${username}`);
         }
       }
     });
@@ -53,7 +79,7 @@ export class TwitchChatService {
     this.socket.emit("obs-channel", {
       hideAndShowSource: [
         {
-          sourceName: "LogitechCamCroma",
+          sourceName: "LogitechBrioCam",
         },
       ],
     });
